@@ -1,0 +1,4 @@
+pre-commit
+fastapi
+pydantic
+psycopg2-binary
