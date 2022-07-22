@@ -12,13 +12,13 @@ services:
     ports:
     - 5432:5432
 
-  users-api:
-    build: 
-      context: .
-    ports:
-      - 8000:8000
-    depends_on:
-      - postgresdb
+  # users-api:
+  #   build: 
+  #     context: .
+  #   ports:
+  #     - 8000:8000
+  #   depends_on:
+  #     - postgresdb
 
 volumes:
   pgVolume:
