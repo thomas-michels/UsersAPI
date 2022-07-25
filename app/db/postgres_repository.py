@@ -12,8 +12,8 @@ from app.utils import (
     get_dto_fields,
     get_id_field,
     update_fields,
+    format_type
 )
-from app.utils.postgres_utils import format_type
 
 
 class PostgresRepository(IDBRepository):
