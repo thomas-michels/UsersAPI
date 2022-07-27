@@ -3,6 +3,7 @@
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.crud.users import users_router
 
 
 class FastAPIApplication:
@@ -21,5 +22,7 @@ class FastAPIApplication:
             allow_methods=["*"],
             allow_headers=["*"],
         )
+
+        app.include_router(users_router)
 
         return app
