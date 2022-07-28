@@ -7,6 +7,7 @@ from psycopg2 import OperationalError, connect
 from pydantic import BaseModel
 from app.configs import get_environment, get_logger
 from app.exceptions import PostgresConnectionError
+from uuid import UUID
 
 _env = get_environment()
 _logger = get_logger(__name__)
@@ -20,7 +21,7 @@ def format_type(field: Any) -> str:
 
     :return: str
     """
-    if type(field) is str:
+    if type(field) is str or type(field) is UUID:
         return f"'{field}'"
 
     elif type(field) is datetime:

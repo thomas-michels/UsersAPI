@@ -12,3 +12,5 @@ from app.utils.postgres_utils import (
     get_id_field,
     update_fields,
 )
+
+from app.utils.hash_password import get_password_hash, verify_password

@@ -3,6 +3,7 @@ Module to load all Environment variables
 """
 
 from pydantic import BaseSettings
+from typing import List
 
 
 class Environment(BaseSettings):
@@ -14,9 +15,10 @@ class Environment(BaseSettings):
     POSTGRES_DB_USER: str
     POSTGRES_DB_PASSWORD: str
     POSTGRES_DB_SCHEMA: str
+    HASH_SCHEMES: str
+    HASH_DEPRECATED: str
 
     class Config:
         """Load config file"""
 
         env_file = ".env"
-
