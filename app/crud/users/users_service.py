@@ -107,5 +107,15 @@ class UsersService:
         finally:
             return feedback
 
-    def delete(self, db_schema: str, table: str, id: Union[int, str]) -> Feedback:
-        return self.__repository.delete(db_schema, table, id)
+    def delete(self, id: Union[int, str]) -> Feedback:
+        try:
+            feedback = Feedback()
+            deleted = self.__repository.delete(id=id)
+            if not deleted:
+                feedback.is_successful = False
+
+        except Exception:
+            feedback.is_successful = False
+
+        finally:
+            return feedback

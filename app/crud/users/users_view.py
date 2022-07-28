@@ -65,6 +65,7 @@ def get_users():
         status_code=response["status"], content=jsonable_encoder(response)
     )
 
+
 @users_router.get("/users/{user_id}", tags=["users"], response_model=UserPublic)
 def get_users_by_id(user_id: str):
     """
@@ -97,9 +98,30 @@ def update_users(user_id: str, user: SimpleUser):
     """
     feedback = services.update(id=user_id, dto=user)
     if feedback.is_successful:
+        response = {"status": 200, "message": "Updated with success"}
+
+    else:
+        response = {
+            "status": 404,
+            "message": "Error on get all users",
+            "errors": [error.serialize() for error in feedback.errors],
+        }
+
+    return JSONResponse(
+        status_code=response["status"], content=jsonable_encoder(response)
+    )
+
+
+@users_router.delete("/users/{user_id}", tags=["users"], response_model=UserPublic)
+def delete_users(user_id: str):
+    """
+    Route to delete user
+    """
+    feedback = services.delete(id=user_id)
+    if feedback.is_successful:
         response = {
             "status": 200,
-            "message": "Updated with success"
+            "message": "Delete user with success"
         }
 
     else:

@@ -48,5 +48,5 @@ class UsersRepository(IUsersRepository):
     def update(self, id: Union[int, str], dto: User) -> UserPublic:
         return super().update(id, dto)
 
-    def delete(self, db_schema: str, table: str, id: Union[int, str]) -> UserPublic:
-        return super().delete(db_schema, table, id)
+    def delete(self, id: Union[int, str]) -> UserPublic:
+        return super().delete(id)
