@@ -1,11 +1,12 @@
 """
     Module for UsersService
 """
-from app.crud.users import IUsersRepository, User, UserDB, UserPublic
+from app.crud.users import IUsersRepository, User, UserDB, UserPublic, UpdateUser
 from typing import Union, List
+from app.crud.users.users_schema import SimpleUser
 from app.utils import verify_password, get_password_hash
 from app.shared_schemas import Feedback
-from app.exceptions import UserNotInsertedError, UserGetError
+from app.exceptions import UserNotInsertedError, UserGetError, UserUpdateError
 
 
 class UsersService:
@@ -36,7 +37,7 @@ class UsersService:
         except Exception as error:
             feedback.is_successful = False
             feedback.errors.append(error.args)
-        
+
         finally:
             return feedback
 
@@ -58,10 +59,53 @@ class UsersService:
             return feedback
 
     def get_by_id(self, id: Union[int, str]) -> Feedback:
-        return self.__repository.get_by_id(id)
+        try:
+            feedback = Feedback()
+            user = self.__repository.get_by_id(id)
+            if user:
+                feedback.data.append(user)
 
-    def update(self, id: Union[int, str], dto: User) -> Feedback:
-        return self.__repository.update(id, dto)
+            else:
+                feedback.is_successful = False
+
+        except UserGetError as error:
+            feedback.is_successful = False
+            feedback.errors.append(error)
+
+        finally:
+            return feedback
+
+    def update(self, id: Union[int, str], dto: SimpleUser) -> Feedback:
+        try:
+            feedback = Feedback()
+            old_user = self.__repository.get_by_id_private(id=id)
+            if old_user:
+                updated_user = UpdateUser()
+                updated_user.user_id = id
+                updated_user.username = (
+                    dto.username if dto.username else old_user.username
+                )
+                updated_user.user_password = (
+                    get_password_hash(dto.user_password)
+                    if dto.user_password
+                    else old_user.user_password
+                )
+                updated_user.email = dto.email if dto.email else old_user.email
+
+                user_id = self.__repository.update(id, updated_user)
+
+                if not user_id:
+                    feedback.is_successful = False
+
+            else:
+                feedback.is_successful = False
+
+        except (UserGetError, UserUpdateError) as error:
+            feedback.is_successful = False
+            feedback.errors.append(error)
+
+        finally:
+            return feedback
 
     def delete(self, db_schema: str, table: str, id: Union[int, str]) -> Feedback:
         return self.__repository.delete(db_schema, table, id)

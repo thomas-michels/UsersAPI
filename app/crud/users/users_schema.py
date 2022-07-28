@@ -13,9 +13,19 @@ class SimpleUser(BaseModel):
     Schema for SimpleUser
     """
 
-    username: str = Field(example="thomas")
-    user_password: str = Field(example="teste123")
-    email: EmailStr = Field(example="example@example.com")
+    username: Optional[str] = Field(example="thomas")
+    user_password: Optional[str] = Field(example="teste123")
+    email: Optional[EmailStr] = Field(example="example@example.com")
+
+
+class UpdateUser(SimpleUser):
+    """
+    Schema for UpdateUser
+    """
+
+    user_id: Optional[UUID] = Field(
+        default_factory=uuid4, example="f6f80575-759d-48d2-9a58-fe7e2c26d41d"
+    )
 
 
 class User(SimpleUser):

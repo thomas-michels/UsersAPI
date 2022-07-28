@@ -39,7 +39,11 @@ class UsersRepository(IUsersRepository):
             raise UserGetError()
 
     def get_by_id(self, id: Union[int, str]) -> UserPublic:
-        return super().get_by_id(id)
+        try:
+            return super().get_by_id(id)
+
+        except Exception:
+            raise UserGetError(f"User with id {id} not found")
 
     def update(self, id: Union[int, str], dto: User) -> UserPublic:
         return super().update(id, dto)
