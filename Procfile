@@ -1,1 +1,1 @@
-web: python -m uvicorn app:FastAPIApplication.get_application --host=0.0.0.0
+web: python -m uvicorn app:FastAPIApplication.get_application --host=users-auth-api.herokuapp.com
