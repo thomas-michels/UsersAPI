@@ -94,7 +94,9 @@ def execute_query(sql: str, many=False) -> tuple:
     """
     try:
         conn = connect(
-            f"dbname={_env.POSTGRES_DB_NAME}"
+            f"host={_env.POSTGRES_DB_HOST}"            
+            f" port={_env.POSTGRES_DB_PORT}"            
+            f" dbname={_env.POSTGRES_DB_NAME}"
             f" user={_env.POSTGRES_DB_USER}"
             f" password={_env.POSTGRES_DB_PASSWORD}"
         )

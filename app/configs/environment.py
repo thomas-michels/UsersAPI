@@ -17,6 +17,8 @@ class Environment(BaseSettings):
     POSTGRES_DB_SCHEMA: str
     HASH_SCHEMES: str
     HASH_DEPRECATED: str
+    POSTGRES_DB_HOST: str
+    POSTGRES_DB_PORT: int
 
     class Config:
         """Load config file"""
