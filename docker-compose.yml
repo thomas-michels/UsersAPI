@@ -1,0 +1,34 @@
+version: '3.8'
+
+networks:
+  users_api_network:
+    external: false
+
+services:
+
+  postgresdb:
+    container_name: users_postgres
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: root
+    volumes:
+    - pgVolume:/var/lib/postgresql/data
+    ports:
+    - 5432:5432
+    networks:
+      - users_api_network
+
+  api:
+    container_name: users_api
+    build: 
+      context: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgresdb
+    networks:
+      - users_api_network
+
+volumes:
+  pgVolume:
