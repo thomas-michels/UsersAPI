@@ -65,6 +65,25 @@ class IDBRepository(ABC):
         raise NotImplementedError("Get by ID not implemented!")
 
     @abstractmethod
+    def get_by_name(
+        self, db_schema: str, table: str, name: str, dto: BaseModel
+    ) -> BaseModel:
+        """
+        Method to get by name data in database
+
+        :param db_schema: Name of DB Schema
+
+        :param table: Name of table
+
+        :param name: str
+
+        :param dto: DataTransferObject
+
+        :return: BaseModel
+        """
+        raise NotImplementedError("Get by name not implemented!")
+
+    @abstractmethod
     def update(
         self, db_schema: str, table: str, id: Union[int, str], dto: BaseModel
     ) -> BaseModel:

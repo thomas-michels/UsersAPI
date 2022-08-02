@@ -75,6 +75,23 @@ class UsersService:
         finally:
             return feedback
 
+    def get_by_name(self, username: str) -> Feedback:
+        try:
+            feedback = Feedback()
+            user = self.__repository.get_by_name(username)
+            if user:
+                feedback.data.append(user)
+
+            else:
+                feedback.is_successful = False
+
+        except UserGetError as error:
+            feedback.is_successful = False
+            feedback.errors.append(error)
+
+        finally:
+            return feedback
+
     def update(self, id: Union[int, str], dto: SimpleUser) -> Feedback:
         try:
             feedback = Feedback()
@@ -119,3 +136,13 @@ class UsersService:
 
         finally:
             return feedback
+
+    def authenticate_user(self, username: str, password: str):
+        user = self.__repository.get_by_name_private(username)
+        if not user:
+            return False
+
+        if not verify_password(password, user.user_password):
+            return False
+
+        return user
