@@ -51,6 +51,17 @@ class PostgresRepository(IDBRepository):
         value = execute_query(sql=query)
         return dto(**mount_dto(dto, value))
 
+    def get_by_name(
+        self, db_schema: str, table: str, username: str, dto: BaseModel
+    ) -> BaseModel:
+        fields = fiels_converter(get_dto_fields(dto))
+        query = f"""
+        SELECT {fields} FROM {db_schema}.{table} WHERE username = {format_type(username)};
+        """
+        value = execute_query(sql=query)
+        return dto(**mount_dto(dto, value))
+
+
     def update(
         self, db_schema: str, table: str, id: Union[int, str], dto: BaseModel
     ) -> BaseModel:
