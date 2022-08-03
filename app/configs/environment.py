@@ -3,7 +3,6 @@ Module to load all Environment variables
 """
 
 from pydantic import BaseSettings
-from typing import List
 
 
 class Environment(BaseSettings):
@@ -22,6 +21,7 @@ class Environment(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    AUTH_URL: str
 
     class Config:
         """Load config file"""

@@ -1,8 +1,8 @@
 """
     Module for UsersService
 """
-from app.crud.users import IUsersRepository, User, UserDB, UserPublic, UpdateUser
-from typing import Union, List
+from app.crud.users import IUsersRepository, User, UpdateUser
+from typing import Union
 from app.crud.users.users_schema import SimpleUser
 from app.utils import verify_password, get_password_hash
 from app.shared_schemas import Feedback
