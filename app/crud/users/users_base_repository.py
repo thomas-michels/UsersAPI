@@ -26,6 +26,12 @@ class IUsersRepository:
     def get_by_id(self, id: Union[int, str]) -> UserPublic:
         return self.__connection.get_by_id(self.__db_schema, self.__table, id, UserPublic)
 
+    def get_by_name(self, username: str) -> UserPublic:
+        return self.__connection.get_by_name(self.__db_schema, self.__table, username, UserPublic)
+
+    def get_by_name_private(self, username: str) -> UserDB:
+        return self.__connection.get_by_name(self.__db_schema, self.__table, username, UserDB)
+
     def get_by_id_private(self, id: Union[int, str]) -> UserDB:
         return self.__connection.get_by_id(self.__db_schema, self.__table, id, UserDB)
 

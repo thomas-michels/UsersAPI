@@ -2,22 +2,32 @@
     Module for Users Routes
 """
 from typing import List
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Security
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from app.crud.users import User, UserPublic, UsersService, UsersRepository, SimpleUser
+from app.crud.users import (
+    User,
+    UserPublic,
+    UsersService,
+    UsersRepository,
+    SimpleUser,
+    UserDB,
+)
+from app.crud.oauth import get_current_user
 from app.db import PostgresRepository
 
 
 users_router = APIRouter()
-
 
 repository = UsersRepository(connection=PostgresRepository())
 services = UsersService(repository=repository)
 
 
 @users_router.post("/users/", tags=["users"], response_model=UserPublic)
-def create_users(user: SimpleUser):
+def create_users(
+    user: SimpleUser,
+    current_user: UserDB = Security(get_current_user, scopes=["create"]),
+):
     """
     Route to create new user
     """
@@ -41,8 +51,15 @@ def create_users(user: SimpleUser):
     )
 
 
+@users_router.get("/users/me/", response_model=User)
+async def read_users_me(
+    current_user: UserDB = Security(get_current_user, scopes=["me"])
+):
+    return JSONResponse(status_code=200, content=jsonable_encoder(current_user.dict()))
+
+
 @users_router.get("/users/", tags=["users"], response_model=List[UserPublic])
-def get_users():
+def get_users(current_user: UserDB = Security(get_current_user, scopes=["read"])):
     """
     Route to get user
     """
@@ -67,7 +84,9 @@ def get_users():
 
 
 @users_router.get("/users/{user_id}", tags=["users"], response_model=UserPublic)
-def get_users_by_id(user_id: str):
+def get_users_by_id(
+    user_id: str, current_user: UserDB = Security(get_current_user, scopes=["read"])
+):
     """
     Route to get user by id
     """
@@ -92,7 +111,11 @@ def get_users_by_id(user_id: str):
 
 
 @users_router.put("/users/{user_id}", tags=["users"], response_model=UserPublic)
-def update_users(user_id: str, user: SimpleUser):
+def update_users(
+    user_id: str,
+    user: SimpleUser,
+    current_user: UserDB = Security(get_current_user, scopes=["update"]),
+):
     """
     Route to update user
     """
@@ -113,16 +136,15 @@ def update_users(user_id: str, user: SimpleUser):
 
 
 @users_router.delete("/users/{user_id}", tags=["users"], response_model=UserPublic)
-def delete_users(user_id: str):
+def delete_users(
+    user_id: str, current_user: UserDB = Security(get_current_user, scopes=["delete"])
+):
     """
     Route to delete user
     """
     feedback = services.delete(id=user_id)
     if feedback.is_successful:
-        response = {
-            "status": 200,
-            "message": "Delete user with success"
-        }
+        response = {"status": 200, "message": "Delete user with success"}
 
     else:
         response = {

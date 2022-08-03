@@ -51,6 +51,7 @@ class UserDB(User):
     user_id: UUID = Field(
         default_factory=uuid4, example="f6f80575-759d-48d2-9a58-fe7e2c26d41d"
     )
+    disabled: bool = Field(default=False)
 
 
 class UserPublic(BaseModel):
