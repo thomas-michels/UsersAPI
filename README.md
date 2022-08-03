@@ -13,10 +13,9 @@ A parte de autenticação possui duas modalidades:
 
 A aplicação foi criada utilizando _Python_ e a biblioteca _FastAPI_, o banco de dados com _Postgres_ e a ferramenta _Flyway_ para ter o controle das versões do BD. Ela foi desenvolvidoa seguindo o padrão GitFlow, e usando o _Pre-commit_ para validar se cada commit está no padrão do _conventional commits_.
 
-O desenvolvimento foi realizado seguindo os principios do _Clean Code, Clean Architecture_ e _TDD (Test-Driven-Development)_.
+O desenvolvimento foi realizado seguindo os principios do _Clean Code e Clean Architecture_.
 
 
 ## Como utilizar
 
-...
-
+- Disponível na URL: https://users-auth-api.herokuapp.com/docs
