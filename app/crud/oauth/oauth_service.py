@@ -1,17 +1,17 @@
 """
     Module for oauth service
 """
-from fastapi import Depends, HTTPException, Security, status
+from fastapi import Depends, HTTPException, status
 from fastapi.security import (
     OAuth2PasswordBearer,
     SecurityScopes,
 )
-from app.crud.users import UsersService, UsersRepository, UserDB
+from app.crud.users import UsersService, UsersRepository
 from app.db import PostgresRepository
-from jose import JWTError, jwt
 from app.configs import get_environment
 from app.shared_schemas import TokenData
 from pydantic import ValidationError
+from app.utils import decode_token
 
 _env = get_environment()
 
@@ -46,21 +46,27 @@ async def get_current_user(
     )
 
     try:
-        payload = jwt.decode(token, _env.SECRET_KEY, algorithms=[_env.ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        payload = decode_token(token=token)
+        if not payload or not payload.get("sub"):
             raise credentials_exception
 
+        username: str = payload.get("sub")
         token_scopes = payload.get("scopes", [])
         token_data = TokenData(scopes=token_scopes, username=username)
 
-    except (JWTError, ValidationError):
+    except ValidationError:
         raise credentials_exception
 
     user = repository.get_by_name_private(username=token_data.username)
 
     if not user:
         raise credentials_exception
+
+    if user.disabled:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User disabled",
+        )
 
     for scope in security_scopes.scopes:
         if scope not in token_data.scopes:
@@ -70,11 +76,3 @@ async def get_current_user(
                 headers={"WWW-Authenticate": authenticate_value},
             )
     return user
-
-
-async def get_current_active_user(
-    current_user: UserDB = Security(get_current_user, scopes=["me"])
-):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user

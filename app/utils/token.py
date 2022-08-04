@@ -13,7 +13,15 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
 
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
-        
+
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, _env.SECRET_KEY, algorithm=_env.ALGORITHM)
     return encoded_jwt
+
+
+def decode_token(token: str) -> dict:
+    try:
+        return jwt.decode(token, _env.SECRET_KEY, algorithms=[_env.ALGORITHM])
+
+    except JWTError:
+        return False

@@ -14,7 +14,7 @@ class FastAPIApplication:
 
     @staticmethod
     def get_application():
-        app = FastAPI()
+        app = FastAPI(title="UsersAPI")
 
         app.add_middleware(
             CORSMiddleware,

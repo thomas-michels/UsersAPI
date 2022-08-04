@@ -14,4 +14,4 @@ from app.utils.postgres_utils import (
 )
 
 from app.utils.hash_password import get_password_hash, verify_password
-from app.utils.token import create_access_token
+from app.utils.token import create_access_token, decode_token

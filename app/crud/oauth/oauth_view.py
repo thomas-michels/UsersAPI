@@ -1,7 +1,7 @@
 """
     Module for oauth
 """
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from app.crud.users import UsersService, UsersRepository
 from app.db import PostgresRepository
@@ -22,6 +22,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     user = services.authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    if user.disabled:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User disabled",
+        )
 
     access_token_expires = timedelta(minutes=_env.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
