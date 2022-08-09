@@ -23,6 +23,7 @@ oauth2_scheme = OAuth2PasswordBearer(
         "create": "Create information.",
         "delete": "Delete information.",
         "read": "Read information.",
+        "2FA": "Two Factor Authentication",
     },
 )
 

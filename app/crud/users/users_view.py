@@ -51,7 +51,7 @@ def create_users(
     )
 
 
-@users_router.get("/users/me/", response_model=User)
+@users_router.get("/users/me/", tags=["users"], response_model=UserDB)
 async def read_users_me(
     current_user: UserDB = Security(get_current_user, scopes=["me"])
 ):
