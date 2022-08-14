@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.crud.users import users_router
 from app.crud.oauth import oauth_router
+from app.crud.scopes import scopes_router
 
 
 class FastAPIApplication:
@@ -26,5 +27,6 @@ class FastAPIApplication:
 
         app.include_router(users_router)
         app.include_router(oauth_router)
+        app.include_router(scopes_router)
 
         return app

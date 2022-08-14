@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS roles (
-   role_id serial PRIMARY KEY,
-   role_name VARCHAR (255) UNIQUE NOT NULL
+CREATE TABLE IF NOT EXISTS scopes (
+   scope_id serial PRIMARY KEY,
+   scope_name VARCHAR (255) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -13,13 +13,13 @@ CREATE TABLE IF NOT EXISTS users (
     disabled BOOLEAN
 );
 
-CREATE TABLE users_roles (
+CREATE TABLE user_scopes (
   user_id uuid NOT NULL,
-  role_id INT NOT NULL,
+  scope_id INT NOT NULL,
   grant_date TIMESTAMP,
-  PRIMARY KEY (user_id, role_id),
-  FOREIGN KEY (role_id)
-      REFERENCES roles (role_id),
+  PRIMARY KEY (user_id, scope_id),
+  FOREIGN KEY (scope_id)
+      REFERENCES roles (scope_id),
   FOREIGN KEY (user_id)
       REFERENCES users (user_id)
 );
